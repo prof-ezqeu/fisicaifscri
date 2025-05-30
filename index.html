@@ -74,9 +74,9 @@
       return function(...args) {
         let dadosDoHTML = args;
         //(typeof window[funcao] === 'function') ? window[funcao](...args) : undefined;
-console.log("dadosDoHTML: "+dadosDoHTML)
+
 		    let jsonParaEnviar = { tipo: funcao, dados: dadosDoHTML  };
-console.log("jsonParaEnviar: "+JSON.stringify(jsonParaEnviar))
+
 		
 	
           const mensagemRespostaDiv = document.getElementById('mensagemResposta');
