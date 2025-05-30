@@ -88,7 +88,7 @@ console.log("jsonParaEnviar: "+JSON.stringify(jsonParaEnviar))
           // É crucial converter o objeto JSON em uma string para enviá-lo corretamente via FormData.
           formData.append('payloadJson', JSON.stringify(jsonParaEnviar));
 
-          fetch("https://script.google.com/a/macros/ifsc.edu.br/s/AKfycbzkVymEnVyATRl2fljflEAKZOm9fW9f-cJptZn-bhuhbpdVn_Doy5sl9irGUCG2gsKA4g/exec", {
+          fetch("https://script.google.com/macros/s/AKfycbxaApbi6qd6z84Nbt_XJhR4nkflNrRF-HUWevA_Yy2RIVlvXKsdib5hMsb0UKOzL7aY/exec", {
               method: 'POST',
               body: formData
           })
