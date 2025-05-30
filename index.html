@@ -101,7 +101,7 @@ console.log("jsonParaEnviar: "+JSON.stringify(jsonParaEnviar))
               return response.json();
           })
           .then(data => {
-              console.log('Resposta do GAS:', data);
+              
               if (data.status === "success") { // Exibe os dados retornados pelo GAS.
 
 saida = JSON.parse(data.message || ["ok"]);  //console.log("saida: "+saida);
