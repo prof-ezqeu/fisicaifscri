@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Calendário Google</title>
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/main.min.css" rel="stylesheet" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 14px;
+      height: 100%;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-image: url('https://i.ibb.co/nqxftCRc/school-background-physics-mathematics-formulas-drawings-scientific-research-illustration-531521-1472.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.17;
+      z-index: -1;
+    }
+    #calendar {
+      max-width: 1100px;
+      margin: 40px auto;
+      background-color: rgba(255, 255, 255, 0.72);
+      padding: 20px;
+      border-radius: 10px;
+      height: 1400px;
+    }
+    .fc-event-title, .fc-event-time {
+      color: black !important;
+    }
+    .fc-timegrid-slot {
+      height: 40px !important;
+    }
+    h1, h3 {
+      color: black;
+      text-shadow: 1px 1px 2px black;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="text-align:center; margin-bottom: 0;">HORÁRIO DOS ATENDIMENTOS E MONITORIAS DE FÍSICA</h1>
+  <h3 style="text-align:center; margin-top: 0;">
+    || <span style="color:Blue">TÉCNICO</span> || 
+    <span style="color:LimeGreen">GRADUAÇÃO</span> || 
+    <span style="color:Gold">ATENDIMENTO (professor)</span> ||
+  </h3>
+
+  <div id="calendar"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.9/index.global.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/locales/pt-br.global.min.js"></script>
+
+
+
+    <button type="button" value='Clique para enviar JSON específico' onclick='atualizarTabela(9)'>Clique para enviar JSON: 
+		<div id="mensagemResposta" style="background-color: #3cb94f;"></div>
+		<div id="mensagemTeste" style="background-color: red;"></div>
+    </button>
+
+
+<script>                  
+  function enviarArray(funcaoQueRecebeDeVolta) {//here
+	let saida;
+  return new Proxy({}, {
+    get(target, funcao) {
+      return function(...args) {
+        let dadosDoHTML = args;
+        //(typeof window[funcao] === 'function') ? window[funcao](...args) : undefined;
+console.log("dadosDoHTML: "+dadosDoHTML)
+		    let jsonParaEnviar = { tipo: funcao, dados: dadosDoHTML  };
+console.log("jsonParaEnviar: "+JSON.stringify(jsonParaEnviar))
+		
+	
+          const mensagemRespostaDiv = document.getElementById('mensagemResposta');
+          let saida;
+          mensagemRespostaDiv.innerHTML = 'Enviando dados...';
+          mensagemRespostaDiv.className = 'mensagem-info';
+
+          const formData = new FormData();
+          // É crucial converter o objeto JSON em uma string para enviá-lo corretamente via FormData.
+          formData.append('payloadJson', JSON.stringify(jsonParaEnviar));
+
+          fetch("https://script.google.com/a/macros/ifsc.edu.br/s/AKfycbzkVymEnVyATRl2fljflEAKZOm9fW9f-cJptZn-bhuhbpdVn_Doy5sl9irGUCG2gsKA4g/exec", {
+              method: 'POST',
+              body: formData
+          })
+          .then(response => {
+              if (!response.ok) {
+                  return response.text().then(text => {
+                      throw new Error(`Erro do servidor (Status: ${response.status}): ${text || 'Sem detalhes.'}`);
+                  });
+              }
+              return response.json();
+          })
+          .then(data => {
+              console.log('Resposta do GAS:', data);
+              if (data.status === "success") { // Exibe os dados retornados pelo GAS.
+
+saida = JSON.parse(data.message || ["ok"]);  //console.log("saida: "+saida);
+// document.getElementById('mensagemTeste').innerText = "Pelo meio: "+saida;
+        funcaoQueRecebeDeVolta(saida);//Chama funcaoQueRecebeDeVoltaNoHTML(retorno) {}
+        mensagemRespostaDiv.innerHTML = "VEIO"/*. O que foi: "+ data.dadosEnviados*/;
+
+
+
+
+
+              } else {
+                  mensagemRespostaDiv.innerHTML = `Erro: ${data.message || 'Ocorreu um problema ao processar a resposta.'}`;
+                  console.log(`Erro: ${data.message || 'Ocorreu um problema ao processar a resposta.'}`);
+              }
+          })
+          .catch(error => {
+              console.error('Erro ao enviar os dados:', error);
+              mensagemRespostaDiv.innerHTML = `Erro na comunicação: ${error.message}`;
+          });
+      };
+    }
+  });
+}
+
+      
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      enviarArray(initCalendar).aqui();
+    });
+/*
+function eventSourcesGAS(aa){
+
+  let a = [
+  {
+    "googleCalendarId": "c_icmvu42dmg49lbfvev1tnalg7k@group.calendar.google.com",
+    "color": "rgba(255,223,0,0.7)"
+  },
+  {
+    "googleCalendarId": "c_a3521c11c2a2636c64483403fcdda9e8f24d70cf518c54116d1c8f72d4f24367@group.calendar.google.com",
+    "color": "rgba(255,255,102,0.7)"
+  },
+  {
+    "googleCalendarId": "c_246ba28232453ca7604a637b2f9a289a12a843f5706cb1e36cd05d3f5de86654@group.calendar.google.com",
+    "color": "rgba(255,215,0,0.7)"
+  },
+  {
+    "googleCalendarId": "c_3ce5f5436a68f1cf761d52f484322b3a4b140f6a21c0025f741e4d15f2f32857@group.calendar.google.com",
+    "color": "rgba(25,25,112,0.7)"
+  },
+  {
+    "googleCalendarId": "c_54a70dad0d95aad7397c11f5ac51cd853e3c3cccb237aa57b844dee9625bdf51@group.calendar.google.com",
+    "color": "rgba(70,130,180,0.7)"
+  },
+  {
+    "googleCalendarId": "c_691e1fae512bf7dc9c082c227c2a44582e943f84ae8d1fd32ac02a6588a2acfc@group.calendar.google.com",
+    "color": "rgba(91,207,89,0.7)"
+  },
+  {
+    "googleCalendarId": "c_d03489d028f547ae9478af98201eef219c542f4174b166b179be8d7843847690@group.calendar.google.com",
+    "color": "rgba(34,139,34,0.7)"
+  }
+]
+
+console.log("Taquí",JSON.stringify(a),aa)
+let c = JSON.stringify(a);
+  return JSON.parse(aa);
+}*/
+
+
+    function initCalendar(dados) { //console.log("dados: ",dados[1])
+      var calendarEl = document.getElementById('calendar');
+
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        locale: 'pt-br',
+        timeZone: 'America/Sao_Paulo',
+        initialView: 'timeGridWeek',
+        headerToolbar: {
+          left: 'prev,next',
+          center: 'title',
+          right: 'today'
+        },
+        buttonText: {
+          today: 'Semana Atual'
+        },
+        allDaySlot: false,
+        slotMinTime: '07:45:00',
+        slotMaxTime: '22:20:00',
+        hiddenDays: [0, 6],
+        googleCalendarApiKey: dados[0],
+        eventSources: JSON.parse(dados[1])/*eventSourcesGAS()*/,
+
+        // ⬇️ Aqui tratamos o clique no evento ⬇️
+        eventClick: function(info) {
+          // Se o plugin definiu uma URL (link para o evento), abre em nova aba
+          if (info.event.url) {
+            window.open(info.event.url, '_blank');
+            info.jsEvent.preventDefault(); // evita o comportamento padrão
+          }
+        },
+
+        eventDidMount: function(info) {
+          const timeEl  = info.el.querySelector('.fc-event-time');
+          const titleEl = info.el.querySelector('.fc-event-title');
+          if (timeEl && titleEl) {
+            const timeText = timeEl.innerText;
+            const location = info.event.extendedProps.location || '';
+            let fullText = `${titleEl.innerText} – ${timeText}`;
+            if (location) {
+              fullText += `\n📍 ${location}`;
+            }
+            timeEl.innerText    = '';
+            titleEl.innerText   = fullText;
+          }
+        }
+      });
+
+      calendar.render();
+    }
+  </script>
+</body>
+</html>
